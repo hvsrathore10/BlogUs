@@ -13,6 +13,19 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    profileImageURL: {
+        type: String,
+        default: "/images/defaultProfile.jpeg"
+    },
+    groups: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'group' 
+    }],
+    role: { 
+        type: String, 
+        enum: ['member', 'admin'], 
+        default: 'member' 
     }
 },{timestamps: true});
 

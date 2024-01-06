@@ -1,13 +1,16 @@
 import express from 'express';
 const router = express.Router();
 import { body, validationResult } from 'express-validator';
+import User from '../models/User.js';
 import Blogs from '../models/Blogs.js';
 import fetchuser from '../middleware/fetchuser.js';
+import multer from 'multer';
+import path from 'path';
 
 //Route 1: Get All the Blogs of user using GET "/api/v1/blogs/fetchallblogs" Login required 
 router.get('/fetchallblogs', fetchuser, async (req,res)=>{
     try {
-        const blogs = await Blogs.find({user: req.user.id});
+        const blogs = await Blogs.find({user: req.user._id});
         res.json(blogs);
     } catch (error) {
         console.error(error.message);
@@ -15,23 +18,39 @@ router.get('/fetchallblogs', fetchuser, async (req,res)=>{
     }
 })
 
+//image upload system ::
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.resolve(`./public/uploads/`));
+    },
+    filename: function (req, file, cb) {
+      const fileName = `${Date.now()}-${file.originalname}`;
+      cb(null,fileName);
+    }
+})
+const upload = multer({ storage: storage })
 
 //Route 2: Add new Blog using POST "/api/v1/blogs/addblog" Login required 
-router.post('/addblog', fetchuser, [
+router.post('/addblog', fetchuser, upload.single("coverImage") , [
     body('title','Enter a valid Title').isLength({min: 3}),
     body('description','Description must be atleast 5 Characters').isLength({min: 5})
 ], async (req,res)=>{
     //try-catch use to protact database from malfunctioning
     try {
-        const {title,description,picture,video,categories} = req.body.formData;
+        const {tags,title,description,video,categories} = req.body.formData;
         //If there are errors, return Bed Reqiust and the errors
         const errors = validationResult(req);
         if(!errors.isEmpty()){
             return res.status(400).json({errors: errors.array()});
         }
+        // Validate tagged users
+        const valid = await Promise.all(tags.map(async (tagId) => !!await User.findById(tagId)));
+        if (!valid.every(Boolean)) {
+            return res.status(400).json({ error: 'Invalid tag' });
+        }
         const blogs = new Blogs({
-            title, description, picture, video, 
-            categories, user: req.user.id
+            title, description, picture: `/uploads/${req.file.filename}`, video, 
+            categories, user: req.user._id, tags
         })
         const savedBlog = await blogs.save();
         res.json(savedBlog);
@@ -58,7 +77,7 @@ router.put('/updateblog/:id', fetchuser, async (req,res)=>{
     let blog = await Blogs.findById(req.params.id);
     if(!blog){ return res.status(404).send("Not Found")}
 
-    if(blog.user.toString() !== req.user.id){
+    if(blog.user.toString() !== req.user._id){
         return res.status(401).send("Not Allowed");
     }
 
@@ -77,7 +96,7 @@ router.delete('/deleteblog/:id', fetchuser, async (req,res)=>{
     if(!blog){ return res.status(404).send("Not Found")}
     
     //Allowed deletion only if user own this blog
-    if(blog.user.toString() !== req.user.id){
+    if(blog.user.toString() !== req.user._id){
         return res.status(401).send("Not Allowed");
     }
 

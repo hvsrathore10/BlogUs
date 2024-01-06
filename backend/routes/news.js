@@ -7,7 +7,7 @@ import fetchuser from '../middleware/fetchuser.js';
 //Route 1: Get All the News using GET "/api/v1/news/fetchallnews" Login required 
 router.get('/fetchallnews', fetchuser, async (req,res)=>{
     try {
-        const news = await News.find({user: req.user.id});
+        const news = await News.find({user: req.user._id});
         res.json(news);
     } catch (error) {
         console.error(error.message);
@@ -31,7 +31,7 @@ router.post('/addnews', fetchuser, [
         }
         const news = new News({
             title, description, picture, 
-            categories, user: req.user.id
+            categories, user: req.user._id
         })
         const savedNews = await news.save();
         res.json(savedNews);
@@ -57,7 +57,7 @@ router.put('/updatenews/:id', fetchuser, async (req,res)=>{
     let news = await News.findById(req.params.id);
     if(!news){ return res.status(404).send("Not Found")}
 
-    if(news.user.toString() !== req.user.id){
+    if(news.user.toString() !== req.user._id){
         return res.status(401).send("Not Allowed");
     }
 
@@ -76,7 +76,7 @@ router.delete('/deletenews/:id', fetchuser, async (req,res)=>{
     if(!news){ return res.status(404).send("Not Found")}
     
     //Allowed deletion only if user own this news
-    if(news.user.toString() !== req.user.id){
+    if(news.user.toString() !== req.user._id){
         return res.status(401).send("Not Allowed");
     }
 

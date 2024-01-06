@@ -21,5 +21,4 @@ app.use('/api/v1/blog/uploadImage',uploadImage);
 app.use('*',(req,res)=>{
     res.status(404).json({error: "Not Found"})
 });
-
 export default app;

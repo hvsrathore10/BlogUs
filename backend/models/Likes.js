@@ -1,20 +1,20 @@
 import mongoose from 'mongoose';
 
 const LikeSchema = mongoose.Schema({
-    user_id: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user_id',
+        ref: 'user',
         required: true
     },
-    blog_id: {
+    blogId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'blog_id'
+        ref: 'blog'
     },
     likedDate: {
         type: Date,
         default: Date.now
     }
-});
+},{timestamps: true});
 
 const like = mongoose.model('like', LikeSchema);
 

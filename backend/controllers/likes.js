@@ -3,8 +3,8 @@ import Likes from '../models/Likes.js';
 export const newLike = async (req, res) => {
     try {
         const like = await new Likes({
-            user_id: req.user.id,
-            blog_id: req.params.id
+            userId: req.user._id,
+            blogId: req.params.blogId
         });
 
         like.save();
@@ -18,7 +18,7 @@ export const newLike = async (req, res) => {
 
 export const getLikes = async (req, res) => {
     try {
-        const likes = await Likes.find({ blog_id: req.params.id });
+        const likes = await Likes.find({ blogId: req.params.blogId });
         
         res.status(200).json(likes);
     } catch (error) {
@@ -28,7 +28,7 @@ export const getLikes = async (req, res) => {
 
 export const deleteLike = async (req, res) => {
     try {
-        const like = await Likes.findById(req.params.id);
+        const like = await Likes.findById(req.params.blogId);
         await like.delete()
 
         res.status(200).json('Post unliked successfully');

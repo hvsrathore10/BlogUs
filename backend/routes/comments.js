@@ -8,17 +8,17 @@ import {
 
 //Route 1: Get All the comment associated with 'id'(blog) using 
 //GET "/api/v1/blog/comments/fetchcomments/:id"  Login required 
-router.get('/fetchcomments/:id', fetchuser, getComments);
+router.get('/fetchcomments/:blogId', fetchuser, getComments);
 
 
 //Route 2: Add new comment to 'id'(blog) using 
 //POST "/api/v1/blog/comments/addcomment/:id"  Login required 
-router.post('/addcomment/:id', fetchuser, newComment);
+router.post('/addcomment/:blogId', fetchuser, newComment);
 
 
 //Route 3: Deleting an exiting comment using 
 //DELETE "/api/v1/blog/comment/deletecomment/:id"  Login required 
-router.delete('/deletecomment/:id', fetchuser, deleteComment);
+router.delete('/deletecomment/:blogId', fetchuser, deleteComment);
 
 
 export default router;

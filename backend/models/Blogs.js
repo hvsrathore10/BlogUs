@@ -1,10 +1,14 @@
 import mongoose from 'mongoose';
 
 const BlogSchema = new mongoose.Schema({
-    user: {
+    createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
+    tags: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    }],
     title: {
         type: String,
         required: true,

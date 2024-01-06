@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const NewsSchema = new mongoose.Schema({
-    user: {
+    createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },

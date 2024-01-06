@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 
 const CommentSchema = mongoose.Schema({
-    user_id: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user_id',
+        ref: 'user',
         required: true
     },
-    blog_id: {
+    blogId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'blog_id'
+        ref: 'blog'
     },
     comment:{
         type: String,

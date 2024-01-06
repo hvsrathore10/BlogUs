@@ -4,8 +4,8 @@ export const newComment = async (req, res) => {
     try {
         const newentry = req.body.comment;
         const comment = await new Comments({
-            user_id: req.user.id,
-            blog_id: req.params.id,
+            userId: req.user._id,
+            blogId: req.params.blogId,
             comment: newentry
         });
 
@@ -20,7 +20,7 @@ export const newComment = async (req, res) => {
 
 export const getComments = async (req, res) => {
     try {
-        const comments = await Comments.find({blog_id: req.params.id});
+        const comments = await Comments.find({blogId: req.params.blogId});
         if(!comments){
             res.status(404).send({msg: "No comments have been linked to this blog."});
         }
@@ -33,7 +33,7 @@ export const getComments = async (req, res) => {
 
 export const deleteComment = async (req, res) => {
     try {
-        const comment = await Comment.findById(req.params.id);
+        const comment = await Comment.findById(req.params.blogId);
         await comment.delete()
 
         res.status(200).json('comment deleted successfully');

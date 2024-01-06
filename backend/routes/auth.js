@@ -42,7 +42,7 @@ router.post('/createuser' , [
         })
         const data = {
             user: {
-                id: user.id,
+                id: user._id,
                 username: user.name
             }
         }
@@ -86,7 +86,7 @@ router.post('/login' , [
         //payload -- user information from database
         const data = {
             user: {
-                id: user.id,
+                id: user._id,
                 username: user.name
             }
         }
@@ -107,7 +107,7 @@ router.post('/login' , [
 // ROUTE 3:Get loggedin user detail Using GET "/api/v1/auth/getuser" ,Login required
 router.get('/getuser', fetchuser, async (req,res)=>{
     try {
-        const userId = req.user.id
+        const userId = req.user._id
         let user = await User.findById(userId).select("-password");
         res.send(user);
     } catch (error) {
@@ -115,4 +115,11 @@ router.get('/getuser', fetchuser, async (req,res)=>{
         res.status(500).send("Internal Error occured");
     }
 }) 
+
+// User search API -> Get user using GET "/api/v1/auth/users/search"
+app.get('/users/search', async (req, res) => {
+    const { email } = req.query;
+    const users = await User.find({ email: { $regex: `^${email}` } });
+    res.json(users);
+  });
 export default router
