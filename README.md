@@ -1,3 +1,7 @@
+<h1 align="center">Hi 👋, this is team Tigdi</h1>
+<h3 align="center">A passionate group of developers from India.</h3>
+
+- 🔭 We currently worked on the project called [BlogUs](https://github.com/hvsrathore10/BlogUs)
 # BlogUs - Space News and Blog Platform
 
 **BlogUs** is a platform dedicated to space news and blogs, offering a rich set of features for both guests and registered users. This README will guide you through the setup, features, and usage of BlogUs.
